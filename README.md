@@ -11,8 +11,6 @@ The dataset stems from one of the most popular machine learning challenges recen
 - Tiago Kieliger
 - Yann Vonlanthen
 
-<<<<<<< HEAD
-
 
 ## Original Data Description taken from kaggle.com
 
@@ -31,8 +29,6 @@ For detailed information on the semantics of the features, labels, and weights, 
 
 
 
-=======
->>>>>>> df51a33bbfed27da77c7733ecaae2c5f4ac7a31b
 ## Approach
 
 ### Step 1: Implement basic ML functions
