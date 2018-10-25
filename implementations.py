@@ -89,6 +89,9 @@ def ridge_regression(y, tx, lambda_):
     w_ridge = np.linalg.inv(tx.T @ tx + l * np.identity(tx.shape[1])) @ tx.T @ y
     return w_ridge
 
+#Logistic function on x
+def logistic_function(x):
+	return 1.0/(1-np.exp(-x))
 
 # Logistic regression using gradient descent or SGD
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
