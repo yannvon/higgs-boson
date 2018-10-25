@@ -51,20 +51,25 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 # Linear regression using stochastic gradient descent
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """Stochastic gradient descent with batch size of 1"""
-    w = initial_w
+    
+    ws = [initial_w]
+    wtemp = initial_w
+    losses = []
     for n_iter in range(max_iters):
         #Select a random element of y and tx
         r = rd.randint(0,len(y)-1)
         y_elem = np.array([y[r]])
         tx_elem = np.array([tx[r]])
         #Compute its stochastic gradient
-        gradient,err = compute_stoch_gradient(y_elem,tx_elem,w)
+        gradient,err = compute_stoch_gradient(y_elem,tx_elem,wtemp)
         #Update w
-        w = w - gamma * gradient
-    
-    #FIXME Use method computeloss??
-    loss = 1/2*np.mean(err**2)
-    return w, loss
+        wtemp = wtemp - gamma * gradient
+        ws.append(wtemp)
+        #FIXME Use method computeloss??
+        losstemp = 1/2*np.mean(err**2)
+        losses.append(losstemp)
+    #Can return ws and losses for graphs	
+    return wtemp, losstemp
 
 # Least squares regression using normal equations
 def least_squares(y, tx):
