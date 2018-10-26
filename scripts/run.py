@@ -49,6 +49,11 @@ def plot_train_test(train_errors, test_errors, max_k_fold):
     leg.draw_frame(False)
     plt.savefig("regression")
 
+# replace -999 value by the mean of the corresponding feature without taking the aberrant values into account
+def remove_aberrant(data):
+    for i in range(data.shape[1]):
+        data[:, i][data[:, i] == -999.0] = np.mean(data[:, i][data[:, i] != -999.0])
+
 def cross_validation(y, x, k_fold, seed=1):
     """
     split the dataset in k equal subparts. Then train the model on k-1 parts and test it on the last remaining part.
