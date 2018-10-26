@@ -105,3 +105,7 @@ venv.bak/
 
 #dataset
 data/
+
+#Other
+.idea/
+yann_notes.md
