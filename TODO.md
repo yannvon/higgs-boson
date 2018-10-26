@@ -13,3 +13,5 @@ Different methods
 -ridge_regression
 -Logistic regression (Regularized or not)
 
+https://www.overleaf.com/3397262473cbzwmjwkhthn
+
