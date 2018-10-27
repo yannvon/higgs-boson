@@ -88,9 +88,6 @@ def run():
     tx_train = np.c_[np.ones((y_train.shape[0], 1)), data_train]
     tx_test = np.c_[np.ones((y_test.shape[0], 1)), data_test]
 
-    tx_train_cut = tx_train[np.r_[0, 10000]]
-    y_train_cut = y_train[np.r_[0, 10000]]
-
     k_fold = 4
     # loss_train, loss_test = cross_validation(y_train, tx_train, 10)
 
@@ -100,7 +97,9 @@ def run():
     gamma = 0.01
     max_iters = 100000
 
-    weights, loss = reg_logistic_regression(y_train_cut, tx_train_cut, lambda_, initial_w, max_iters, gamma)
+    weights, loss = logistic_regression(y_train_cut, tx_train_cut, initial_w, max_iters, gamma)
+
+    #weights, loss = reg_logistic_regression(y_train_cut, tx_train_cut, lambda_, initial_w, max_iters, gamma)
     print("weights = " + str(weights))
     print("Loss = "+str(loss))
 

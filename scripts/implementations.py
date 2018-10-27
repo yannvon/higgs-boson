@@ -105,6 +105,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         
         # converge criterion
         losses.append(loss)
+
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
 
@@ -125,7 +126,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     # start the logistic regression
     for iter in range(max_iters):
         # get loss and update w.
-        # FIXME cross check
         loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
         gradient = calculate_gradient_reg_logistic_regression(y, tx, w, lambda_)
         w = w - gamma * gradient
@@ -160,6 +160,7 @@ def calculate_loss_logistic_regression(y, tx, w):
 
 def calculate_gradient_logistic_regression(y, tx, w):
     """compute the gradient of loss."""
+    # print(y.shape, tx.shape, w.shape) FIXME this line saved my life
     return tx.T @ (sigmoid(tx @ w) - y)
 
 
