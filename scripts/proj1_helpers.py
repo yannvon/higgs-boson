@@ -29,40 +29,33 @@ def predict_labels(weights, data):
     y_pred = np.dot(data, weights)
     y_pred[np.where(y_pred <= 0)] = -1
     y_pred[np.where(y_pred > 0)] = 1
-    
     return y_pred
 
 #Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3}
-def predict_labels_datasets(weight0,weight1,weight23,data,ids):
-    
+def predict_labels_datasets(weight0, weight1, weight23, data):
+    ids = np.arange(data.shape[0])
     #For num jet 0
-    indexFeatures0 = [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 29]
+    indexFeatures0 = [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     data0 = data[data[:, 22] == 0][:, indexFeatures0]
     ids0 = ids[data[:, 22] == 0]
-    y_pred0 = np.dot(data0,weight0)
-    
+    y_pred0 = np.dot(data0, weight0)
     #For num jet 1
     indexFeatures1 = [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 29]
     data1 = data[data[:, 22] == 1][:, indexFeatures1]
     ids1 = ids[data[:, 22] == 1]
-    y_pred1 = np.dot(data1,weight1)
-    
+    y_pred1 = np.dot(data1, weight1)
     #For num jet 2,3
     data23 = data[data[:, 22] > 1]
     ids23 = ids[data[:, 22] > 1]
-    y_pred23 = np.dot(data23,weight23)
-
+    y_pred23 = np.dot(data23, weight23)
     #Combining everything
     y_pred = np.concatenate((np.concatenate((y_pred0, y_pred1), axis=None),y_pred23),axis=None)
     ids = np.concatenate((np.concatenate((ids0, ids1), axis=None),ids23),axis=None)
     y = np.transpose(np.array([ids,y_pred]))
     y = y[y[:,0].argsort()][:,1]
-    y[np.where(y_pred <= 0)] = -1
-    y[np.where(y_pred > 0)] = 1
-    
+    y[np.where(y <= 0)] = -1
+    y[np.where(y > 0)] = 1
     return y
-
-
 
 def create_csv_submission(ids, y_pred, name):
     """

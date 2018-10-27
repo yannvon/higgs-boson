@@ -3,18 +3,19 @@ import numpy as np
 # ----- Helper functions linear regression -----------------------------------------------------------
 def calculate_mse(e):
     """Calculate the mse for vector e."""
+    #TODO FIXME did we just copy from the answer or did one of us come up with that ?
     return 1/2*np.mean(e**2)
 
 def compute_loss_mse(y, tx, w):
     """Calculate the loss using mean squared error loss function"""
-    e = y - tx.dot(w)
+    e = y - tx @ w
     return calculate_mse(e)
 
 def compute_gradient(y, tx, w):
     """Compute the gradient."""
     N = len(y)
     e = y - tx @ w
-    gradient = - (1.0 / N) * (tx.T @ e)
+    gradient = -(1.0 / N) * (tx.T @ e)
     return gradient, e
 
 def build_poly(x, degree):
@@ -55,7 +56,8 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         gradient, e = compute_gradient(y, tx, weights)
         loss = calculate_mse(e)
         # Update w by gradient
-        weights = weights- gamma * gradient
+        print("loss", loss)
+        weights = weights - gamma * gradient
     
     # return the last w and loss
     return weights, loss
@@ -66,10 +68,11 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """Stochastic gradient descent with batch size of 1"""
     np.random.seed(1)
     weights = initial_w
-
+    min_weights = weights
+    min_loss = calculate_mse(y - tx.dot(weights))
     for n_iter in range(max_iters):
         #Select a random element of y and tx
-        r = np.randomint(0, len(y))
+        r = np.random.randint(0, len(y))
         y_elem = np.array([y[r]])
         tx_elem = np.array([tx[r]])
         #Compute its stochastic gradient
@@ -77,9 +80,13 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
         #Update w
         weights = weights - gamma * gradient
         #Compute loss using mean squared error
-        loss = calculate_mse(err)
+        loss = calculate_mse(y - tx.dot(weights))
+        if(loss < min_loss):
+            min_loss = loss
+            min_weights = weights
+        #print("loss", loss)
 
-    return weights, loss
+    return min_weights, min_loss
 
 # Least squares regression using normal equations
 def least_squares(y, tx):
