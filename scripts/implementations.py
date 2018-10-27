@@ -110,7 +110,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         # log info
         if iter % 100 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
-        
+
         # converge criterion
         losses.append(loss)
 
@@ -141,6 +141,9 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         # log info
         if iter % 100 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+            print("weights size:" + str(np.squeeze(w.T @ w)))
+            print(w)
+
         
         # converge criterion
         losses.append(loss)
