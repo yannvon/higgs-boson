@@ -1,33 +1,17 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from scripts.implementations import *
+
 from scripts.proj1_helpers import *
+from scripts.implementations import *
+import matplotlib.pyplot as plt
 
 y_train, data_train, ids = load_csv_data("../data/train.csv")
 y_test, data_test, ids = load_csv_data("../data/test.csv")
 
 
-def calculate_mse(e):
-    """Calculate the mse for vector e."""
-    return 1/2*np.mean(e**2)
-
-
-def compute_loss(y, tx, w):
-    """Calculate the loss.
-    You can calculate the loss using mse or mae.
-    """
-    e = y - tx.dot(w)
-    return calculate_mse(e)
-
-
-def expand_features(data):
-    return np.append(np.ones((data.shape[0], 1)), data, axis=1)
-
-
 def compute_accuracy(y, y_prediction):
     correct = 0.0
-    for i in range (len(y)):
-        if(y[i] == y_prediction[i]):
+    for i in range(len(y)):
+        if y[i] == y_prediction[i]:
             correct += 1
     accuracy = correct/len(y)
     return accuracy
@@ -52,6 +36,11 @@ def plot_train_test(train_errors, test_errors, max_k_fold):
     plt.savefig("regression")
 
 
+# replace -999 value by the mean of the corresponding feature without taking the aberrant values into account
+def remove_aberrant(data):
+    for i in range(data.shape[1]):
+        data[:, i][data[:, i] == -999.0] = np.mean(data[:, i][data[:, i] != -999.0])
+
 def cross_validation(y, x, k_fold, seed=1):
     """
     split the dataset in k equal subparts. Then train the model on k-1 parts and test it on the last remaining part.
@@ -74,7 +63,7 @@ def cross_validation(y, x, k_fold, seed=1):
     
     for i in range(k_fold):
         start_index = i * split_length
-        if(i == k_fold - 1):
+        if i == k_fold - 1:
             end_index = total_length
         else: #this case is to ensure that all elements are present, in case of unbalanced split
             end_index = (i + 1) * split_length
@@ -85,36 +74,43 @@ def cross_validation(y, x, k_fold, seed=1):
         tx_test = x[start_index : end_index]
         y_test = y[start_index : end_index]
 
-        # linear regression
-        weights = least_squares(y_train, tx_train)
+        # logistic regression
+        #weights, loss = logistic_regression(y, tx_train, initial_w, max_iters, lambda_)
         
-        loss_train.append(compute_loss(y_train, tx_train, weights))
-        loss_test.append(compute_loss(y_test, tx_test, weights))
+        #loss_train.append(loss)
+        #loss_test.append(calculate_loss_logistic_regression(y_test, tx_test, weights))
         
     return np.mean(loss_train), np.mean(loss_test)
 
 
-def run3():
-    tx_train = expand_features(data_train)
-    tx_test = expand_features(data_test)
+def run():
+    print("-- start test --")
+    tx_train = np.c_[np.ones((y_train.shape[0], 1)), data_train]
+    tx_test = np.c_[np.ones((y_test.shape[0], 1)), data_test]
 
-    max_k_fold = 10
-    losses_train = []
-    losses_test = []
-    for i in range(2, max_k_fold + 1):
-        loss_train, loss_test = (cross_validation(y_train, tx_train, 10))
-        losses_train.append(loss_train)
-        losses_test.append(loss_test)
-    plot_train_test(losses_train, losses_test, np.arange(2, max_k_fold + 1))
+    tx_train_cut = tx_train[np.r_[0, 10000]]
+    y_train_cut = y_train[np.r_[0, 10000]]
 
-    weights_regression = least_squares(y_train, tx_train)  
-    y_prediction = predict_labels(weights_regression, tx_train)
+    k_fold = 4
+    # loss_train, loss_test = cross_validation(y_train, tx_train, 10)
 
+    # logistic regression
+    initial_w = np.zeros((tx_train.shape[1], 1))
+    lambda_ = 0.1
+    gamma = 0.01
+    max_iters = 100000
+
+    weights, loss = reg_logistic_regression(y_train_cut, tx_train_cut, lambda_, initial_w, max_iters, gamma)
+    print("weights = " + str(weights))
+    print("Loss = "+str(loss))
+
+    y_prediction = predict_labels(weights, tx_train)
+    print("y_prediction = " + str(y_prediction))
     print("Training set accuracy = "+str(compute_accuracy(y_train, y_prediction)))
-    print("Loss = "+str(compute_loss(y_train, tx_train, weights_regression)))
 
-    y_prediction_test = predict_labels(weights_regression, tx_test)
+    # Create submission
+    y_prediction_test = predict_labels(weights, tx_test)
     create_csv_submission(ids, y_prediction_test, "submission.csv")
 
 
-run3()
+run()
