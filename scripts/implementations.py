@@ -50,7 +50,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 # Linear regression using stochastic gradient descent
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
-    """Stochastic gradient descent with batch size of 1"""
+    """Stochastic gradient descent with batch size of 1""" #FIXME increase batch size?
     np.random.seed(1)
     weights = initial_w
     min_weights = weights
@@ -142,9 +142,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         if iter % 100 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
             print("weights size:" + str(np.squeeze(w.T @ w)))
-            print(w)
 
-        
         # converge criterion
         losses.append(loss)
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
@@ -155,6 +153,39 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     print("loss={l}".format(l=loss))
     return w, loss
 
+
+def reg_logistic_regression_SGD(y, tx, lambda_, initial_w, max_iters, gamma):
+
+    w = initial_w
+    min_weights = w
+    min_loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
+
+    # start the logistic regression
+    for iter in range(max_iters):
+        # get loss and update w.
+        # stochastic -> select random element of y and tx
+        r = np.random.randint(0, len(y))
+        y_elem = np.array([y[r]])
+        tx_elem = np.array([tx[r]])
+
+        gradient = calculate_gradient_reg_logistic_regression(y_elem, tx_elem, w, lambda_)
+        w = w - gamma * gradient
+        #loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
+
+        #if loss < min_loss:
+        #    min_loss = loss
+        #    min_weights = w
+
+        # log info
+        if iter % 10000 == 0:
+            loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
+            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+            print("weights size:" + str(np.squeeze(w.T @ w)))
+
+    # visualization
+    loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
+    print("loss={l}".format(l=loss))
+    return w, loss
 
 # ----- Helper functions for logistic regression ----------------------------------------------------
 def sigmoid(t):
