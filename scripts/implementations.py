@@ -21,16 +21,6 @@ def compute_gradient(y, tx, w):
     gradient = -(1.0 / N) * (tx.T @ e)
     return gradient, e
 
-
-def build_poly(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
-    tx = np.empty([len(x), degree + 1])
-    for i in range(len(x)):
-        for j in range(degree + 1):
-            tx[i, j] = x[i] ** (j+1)    
-    return tx
-
-
 # ----- Implement ML methods -------------------------------------------------------------------------
 # Linear regression using gradient descent
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
@@ -78,8 +68,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 # Least squares regression using normal equations
 def least_squares(y, tx):
     """calculate the least squares solution."""
-    # Returns mse, and optimal weights
-    weights = np.linalg.inv((tx.T @ tx)) @ tx.T @ y
+    weights = np.linalg.solve(tx.T @ tx, tx.T @ y)
     return weights, compute_loss_mse(y, tx, weights)
 
 
@@ -87,9 +76,8 @@ def least_squares(y, tx):
 def ridge_regression(y, tx, lambda_):
     """implement ridge regression."""
     l = 2 * tx.shape[0] * lambda_
-    weights = np.linalg.inv(tx.T @ tx + l * np.identity(tx.shape[1])) @ tx.T @ y
+    weights = np.linalg.solve(tx.T @ tx + l * np.identity(tx.shape[1]), tx.T @ y)
     return weights, compute_loss_mse(y, tx, weights)
-
 
 # Logistic regression using gradient descent or SGD
 # FIXME taken straight from demo ex05, adapt convergence criterion
