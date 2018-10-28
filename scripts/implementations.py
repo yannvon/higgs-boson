@@ -21,16 +21,6 @@ def compute_gradient(y, tx, w):
     gradient = -(1.0 / N) * (tx.T @ e)
     return gradient, e
 
-
-def build_poly(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
-    tx = np.empty([len(x), degree + 1])
-    for i in range(len(x)):
-        for j in range(degree + 1):
-            tx[i, j] = x[i] ** (j+1)    
-    return tx
-
-
 # ----- Implement ML methods -------------------------------------------------------------------------
 # Linear regression using gradient descent
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
