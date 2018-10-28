@@ -78,8 +78,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 # Least squares regression using normal equations
 def least_squares(y, tx):
     """calculate the least squares solution."""
-    # Returns mse, and optimal weights
-    weights = np.linalg.inv((tx.T @ tx)) @ tx.T @ y
+    weights = np.linalg.solve(tx.T @ tx, tx.T @ y)
     return weights, compute_loss_mse(y, tx, weights)
 
 
@@ -87,9 +86,8 @@ def least_squares(y, tx):
 def ridge_regression(y, tx, lambda_):
     """implement ridge regression."""
     l = 2 * tx.shape[0] * lambda_
-    weights = np.linalg.inv(tx.T @ tx + l * np.identity(tx.shape[1])) @ tx.T @ y
+    weights = np.linalg.solve(tx.T @ tx + l * np.identity(tx.shape[1]), tx.T @ y)
     return weights, compute_loss_mse(y, tx, weights)
-
 
 # Logistic regression using gradient descent or SGD
 # FIXME taken straight from demo ex05, adapt convergence criterion

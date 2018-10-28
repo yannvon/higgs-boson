@@ -49,22 +49,23 @@ def create_csv_submission(ids, y_pred, name):
 
 # ----- ADDITIONAL HELPER FUNCTIONS ------------------------------------------------------------------------------------
 #Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3}
-def predict_labels_datasets(weight0, weight1, weight23, data):
+def predict_labels_datasets(weight0, weight1, weight23, data, transform_x):
     ids = np.arange(data.shape[0])
+
+    tx_0, tx_1, tx_23 = transform_x(data)
+
     #For num jet 0
-    indexFeatures0 = [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21]
-    data0 = data[data[:, 22] == 0][:, indexFeatures0]
     ids0 = ids[data[:, 22] == 0]
-    y_pred0 = np.dot(data0, weight0)
+    y_pred0 = np.dot(tx_0, weight0)
+ 
     #For num jet 1
-    indexFeatures1 = [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 29]
-    data1 = data[data[:, 22] == 1][:, indexFeatures1]
     ids1 = ids[data[:, 22] == 1]
-    y_pred1 = np.dot(data1, weight1)
+    y_pred1 = np.dot(tx_1, weight1)
+
     #For num jet 2,3
-    data23 = data[data[:, 22] > 1]
     ids23 = ids[data[:, 22] > 1]
-    y_pred23 = np.dot(data23, weight23)
+    y_pred23 = np.dot(tx_23, weight23)
+
     #Combining everything
     y_pred = np.concatenate((np.concatenate((y_pred0, y_pred1), axis=None),y_pred23),axis=None)
     ids = np.concatenate((np.concatenate((ids0, ids1), axis=None),ids23),axis=None)
@@ -119,14 +120,19 @@ def cross_validation(y, x, k_fold, model, *args):
         
     return np.mean(loss_train), np.mean(loss_test)
 
-def splitData(y, x):
+def split_y(y, x):
     y_t0 = y[x[:, 22] == 0]
     y_t1 = y[x[:, 22] == 1]
     y_t23 = y[(x[:, 22] > 1)]
+    return y_t0, y_t1, y_t23
+
+def split_x(x):
     x_t0 = x[x[:, 22] == 0][:, [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21]]
     x_t1 = x[x[:, 22] == 1][:, [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 29]]
     x_t23 = x[(x[:, 22] > 1)]
-    return y_t0, y_t1, y_t23, x_t0, x_t1, x_t23
+    return x_t0, x_t1, x_t23
+
+
 
 def compute_accuracy(y, y_prediction):
     correct = 0.0
@@ -159,3 +165,11 @@ def standardize(x):
     std_x = np.std(x, axis=0)
     x = x / std_x
     return x, mean_x, std_x
+
+def build_poly(x, degree):
+    """polynomial basis functions for input data x"""
+    tx = x
+    for i in range(2, degree + 1):
+        power = np.apply_along_axis(lambda c: c**i, 1 , x)
+        tx = np.concatenate((tx, power), axis=1)
+    return tx
