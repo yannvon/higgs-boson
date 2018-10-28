@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# ----- HELPER FUNCTIONS PROVIDED --------------------------------------------------------------------------------------
 """some helper functions for project 1."""
 import csv
 import numpy as np
@@ -31,7 +32,22 @@ def predict_labels(weights, data):
     y_pred[np.where(y_pred > 0)] = 1
     return y_pred
 
+def create_csv_submission(ids, y_pred, name):
+    """
+    Creates an output file in csv format for submission to kaggle
+    Arguments: ids (event ids associated with each prediction)
+               y_pred (predicted class labels)
+               name (string name of .csv output file to be created)
+    """
+    with open(name, 'w') as csvfile:
+        fieldnames = ['Id', 'Prediction']
+        writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
+        writer.writeheader()
+        for r1, r2 in zip(ids, y_pred):
+            writer.writerow({'Id':int(r1),'Prediction':int(r2)})
 
+
+# ----- ADDITIONAL HELPER FUNCTIONS ------------------------------------------------------------------------------------
 #Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3}
 def predict_labels_datasets(weight0, weight1, weight23, data):
     ids = np.arange(data.shape[0])
@@ -58,21 +74,69 @@ def predict_labels_datasets(weight0, weight1, weight23, data):
     y[np.where(y > 0)] = 1
     return y
 
-def create_csv_submission(ids, y_pred, name):
+def cross_validation(y, x, k_fold, model, *args):
     """
-    Creates an output file in csv format for submission to kaggle
-    Arguments: ids (event ids associated with each prediction)
-               y_pred (predicted class labels)
-               name (string name of .csv output file to be created)
+    split the dataset in k equal subparts. Then train the model on k-1 parts and test it on the last remaining part.
+    this process is repeatead k times with a different test part each time. The mean loss on the train and 
+    test sets are returned.
+    the evaluation score is accuracy
     """
-    with open(name, 'w') as csvfile:
-        fieldnames = ['Id', 'Prediction']
-        writer = csv.DictWriter(csvfile, delimiter=",", fieldnames=fieldnames)
-        writer.writeheader()
-        for r1, r2 in zip(ids, y_pred):
-            writer.writerow({'Id':int(r1),'Prediction':int(r2)})
+    assert(k_fold > 1)
 
-# Taken from labs
+    # set seed
+    seed = 1
+    np.random.seed(seed)
+    np.random.shuffle(x)
+    # resetting the seed allows for an identical shuffling between y and x
+    np.random.seed(seed)
+    np.random.shuffle(y)
+    
+    loss_train = []
+    loss_test = []
+    
+    total_length = len(y)
+    split_length = int(total_length / k_fold)
+    
+    for i in range(k_fold):
+        start_index = i * split_length
+        if(i == k_fold - 1):
+            end_index = total_length
+        else: #this case is to ensure that all elements are present, in case of unbalanced split
+            end_index = (i + 1) * split_length
+        
+        tx_train = x[np.r_[0 : start_index, end_index: total_length]]
+        y_train = y[np.r_[0 : start_index, end_index: total_length]]
+
+        tx_test = x[start_index : end_index]
+        y_test = y[start_index : end_index]
+
+        # linear regression
+        weights = model(y_train, tx_train, *args)
+        
+        #TODO evaluate accuracy instead
+        loss_train.append(compute_loss(y_train, tx_train, weights))
+        loss_test.append(compute_loss(y_test, tx_test, weights))
+        
+    return np.mean(loss_train), np.mean(loss_test)
+
+def splitData(y, x):
+    y_t0 = y[x[:, 22] == 0]
+    y_t1 = y[x[:, 22] == 1]
+    y_t23 = y[(x[:, 22] > 1)]
+    x_t0 = x[x[:, 22] == 0][:, [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21]]
+    x_t1 = x[x[:, 22] == 1][:, [0, 1, 2, 3, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 29]]
+    x_t23 = x[(x[:, 22] > 1)]
+    return y_t0, y_t1, y_t23, x_t0, x_t1, x_t23
+
+def compute_accuracy(y, y_prediction):
+    correct = 0.0
+    for i in range (len(y)):
+        if(y[i] == y_prediction[i]):
+            correct += 1
+    accuracy = correct/len(y)
+    return accuracy
+
+# ----- FUNCTIONS TAKEN FROM LAB ---------------------------------------------------------------------------------------
 def sample_data(y, x, seed, size_samples):
     """sample from dataset."""
     np.random.seed(seed)

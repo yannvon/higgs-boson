@@ -197,7 +197,7 @@ def calculate_loss_logistic_regression(y, tx, w):
     """compute the cost by negative log likelihood."""
     # FIXME inspired by solutions since mine was bad.
     # return np.sum([np.log(1 + np.exp(tx[n].T @ w)) - y[n] * tx[n].T @ w for n in range(tx.shape[0])])
-    return np.squeeze(-(y.T @ np.log(sigmoid(tx @ w)) + (1 - y).T @ np.log(1 - sigmoid(tx @ w))))
+    return - np.squeeze((y.T @ np.log(sigmoid(tx @ w)) + (1 - y).T @ np.log(1 - sigmoid(tx @ w))))
 
 
 def calculate_gradient_logistic_regression(y, tx, w):
@@ -222,7 +222,7 @@ def calculate_gradient_reg_logistic_regression(y, tx, w, lambda_):
 # ----- Additional section: Newton method ---------------------------------------------------------------------------
 # FIXME this Newton does not have the regularization term, easy to add !
 def calculate_hessian(y, tx, w):
-    """return the hessian of the loss function."""
+    """return the hessian of the loss function.
     # compute S matrix
     N = tx.shape[0]
     S = np.zeros((N,N))
@@ -230,50 +230,44 @@ def calculate_hessian(y, tx, w):
         sig = sigmoid(tx[n].T @ w)
         S[n, n] = sig * (1 - sig)
     H = tx.T @ S @ tx
-    # FIXME check for faster solution
     return H
+    """
+    # FIXME check for faster solution
+    """return the hessian of the loss function."""
+    pred = sigmoid(tx.dot(w))
+    pred = np.diag(pred.T[0])
+    r = np.multiply(pred, (1 - pred))
+    return tx.T.dot(r).dot(tx)
 
 
-def logistic_regression_newton(y, tx, w):
-    """return the loss, gradient, and hessian."""
-    loss = calculate_loss_logistic_regression(y, tx, w)
-    gradient = calculate_gradient_logistic_regression(y, tx, w)
-    hessian = calculate_hessian(y, tx, w)
-    return loss, gradient, hessian
-
-
-def learning_by_newton_method(y, tx, w):
+def learning_by_newton_method(y, tx, w, lambda_, gamma):
     """
     Do one step on Newton's method.
     return the loss and updated w.
     """
-    loss, gradient, hessian = logistic_regression_newton(y, tx, w)
+    loss = calculate_loss_logistic_regression(y, tx, w) + lambda_ / 2 * np.squeeze(w.T @ w)
+    gradient = calculate_gradient_logistic_regression(y, tx, w) + lambda_ * w
+    hessian = calculate_hessian(y, tx, w) + lambda_
     # We are not given gamma, so we assume that we should move to the position of the minimum
-    w = w - np.linalg.inv(hessian) @ gradient
+    w = w - gamma * np.linalg.inv(hessian) @ gradient
     return w, loss
 
 
 # FIXME taken straight from ex05
 # FIXME adapt names of subroutines called
-def logistic_regression_newton_method_demo(y, tx, lambda_, initial_w, max_iters, gamma):
-    # init parameters
-    threshold = 1e-8
-    losses = []
+def logistic_regression_newton(y, tx, lambda_, initial_w, max_iters, gamma):
 
     w = initial_w
+    print(w.shape)
 
     # start the logistic regression
     for iter in range(max_iters):
         # get loss and update w.
-        w, loss = learning_by_newton_method(y, tx, w)
-
+        w, loss = learning_by_newton_method(y, tx, w, lambda_, gamma)
         # log info
-        if iter % 1 == 0:
+        if iter % 100 == 0:
             print("Current iteration={i}, the loss={l}".format(i=iter, l=loss))
-        # converge criterion
-        losses.append(loss)
-        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
-            break
+            print("weights size:" + str(np.squeeze(w.T @ w)))
 
     # visualization
     loss = calculate_loss_logistic_regression(y, tx, w)
