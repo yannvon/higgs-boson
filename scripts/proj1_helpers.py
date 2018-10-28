@@ -75,6 +75,34 @@ def predict_labels_datasets(weight0, weight1, weight23, data, transform_x):
     y[np.where(y > 0)] = 1
     return y
 
+#Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3}
+#This method is specific for logistic regression, because it maps a probability to a value.
+def predict_labels_datasets_logistic(weight0, weight1, weight23, data, transform_x):
+    ids = np.arange(data.shape[0])
+
+    tx_0, tx_1, tx_23 = transform_x(data)
+
+    #For num jet 0
+    ids0 = ids[data[:, 22] == 0]
+    y_pred0 = np.dot(tx_0, weight0)
+ 
+    #For num jet 1
+    ids1 = ids[data[:, 22] == 1]
+    y_pred1 = np.dot(tx_1, weight1)
+
+    #For num jet 2,3
+    ids23 = ids[data[:, 22] > 1]
+    y_pred23 = np.dot(tx_23, weight23)
+
+    #Combining everything
+    y_pred = np.concatenate((np.concatenate((y_pred0, y_pred1), axis=None),y_pred23),axis=None)
+    ids = np.concatenate((np.concatenate((ids0, ids1), axis=None),ids23),axis=None)
+    y = np.transpose(np.array([ids,y_pred]))
+    y = y[y[:,0].argsort()][:,1]
+    y[np.where(y <= 0.5)] = -1
+    y[np.where(y > 0.5)] = 1
+    return y
+
 def cross_validation(y, x, k_fold, model, *args):
     """
     split the dataset in k equal subparts. Then train the model on k-1 parts and test it on the last remaining part.
