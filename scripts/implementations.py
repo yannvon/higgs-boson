@@ -195,6 +195,7 @@ def sigmoid(t):
 
 def calculate_loss_logistic_regression(y, tx, w):
     """compute the cost by negative log likelihood."""
+    # Note: this function takes y with values either 0 or 1 !!! # FIXME aaaaaaaaaahhhhh
     # FIXME inspired by solutions since mine was bad.
     # return np.sum([np.log(1 + np.exp(tx[n].T @ w)) - y[n] * tx[n].T @ w for n in range(tx.shape[0])])
     return - np.squeeze((y.T @ np.log(sigmoid(tx @ w)) + (1 - y).T @ np.log(1 - sigmoid(tx @ w))))
@@ -202,6 +203,7 @@ def calculate_loss_logistic_regression(y, tx, w):
 
 def calculate_gradient_logistic_regression(y, tx, w):
     """compute the gradient of loss."""
+    # Note: this function takes y with values either 0 or 1 !!! # FIXME aaaaaaaaaahhhhh
     # print(y.shape, tx.shape, w.shape) FIXME this line saved my life
     return tx.T @ (sigmoid(tx @ w) - y)
 
