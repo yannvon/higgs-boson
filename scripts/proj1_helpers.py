@@ -136,6 +136,11 @@ def compute_accuracy(y, y_prediction):
     accuracy = correct/len(y)
     return accuracy
 
+def remove_aberrant(data):
+    for i in range(data.shape[1]):
+        data[:, i][data[:, i] == -999.0] = np.mean(data[:, i][data[:, i] != -999.0])
+
+
 # ----- FUNCTIONS TAKEN FROM LAB ---------------------------------------------------------------------------------------
 def sample_data(y, x, seed, size_samples):
     """sample from dataset."""
