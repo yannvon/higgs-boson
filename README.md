@@ -19,7 +19,7 @@ The project is structured as follows, if you want quick results, simple run `run
 ├── data                    # Location of the dataset (not provided, see next section)
 │   ├── train.csv           # The training data set, with labels
 │   └── test.csv            # The testing data set, no labels
-├── predictions				# Folder with different submission files
+├── predictions		    # Folder with different submission files
 │   └── submission.csv      # Our best submission (can be obtained by running run.py)
 ├── scripts                 # Source files
 │   ├── implementations.py  # Our models methods and helper functions
