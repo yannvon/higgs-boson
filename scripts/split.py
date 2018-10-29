@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-
 # ----- This file contains all methods used to split the higgs boson data set into 3 parts, depending on jet num -------
 
 def split_y(y, x):
@@ -21,11 +20,11 @@ def split_x(x):
     return x_t0, x_t1, x_t23
 
 
-def predict_labels_datasets(weight0, weight1, weight23, data, transform_x):
+def predict_labels_datasets(weight0, weight1, weight23, data, transform_x, degree):
     ''' Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3} '''
     ids = np.arange(data.shape[0])
 
-    tx_0, tx_1, tx_23 = transform_x(data)
+    tx_0, tx_1, tx_23 = transform_x(data, degree)
 
     #For num jet 0
     ids0 = ids[data[:, 22] == 0]
@@ -48,13 +47,19 @@ def predict_labels_datasets(weight0, weight1, weight23, data, transform_x):
     y[np.where(y > 0)] = 1
     return y
 
+def predict_labels_logistic(weights, data):
+    """Generates class predictions given weights, and a test data matrix"""
+    y_pred = np.dot(data, weights)
+    y_pred[np.where(y_pred <= 0.5)] = -1
+    y_pred[np.where(y_pred > 0.5)] = 1
+    return y_pred
 
-def predict_labels_datasets_logistic(weight0, weight1, weight23, data, transform_x):
+def predict_labels_datasets_logistic(weight0, weight1, weight23, data, transform_x, degree):
     ''' Generate the predictions given the weigth of the data set with num jet 0, 1  or {2,3} 
     This method is specific to the logistic regression, because it maps a probability to a value
     '''
     ids = np.arange(data.shape[0])
-    tx_0, tx_1, tx_23 = transform_x(data)
+    tx_0, tx_1, tx_23 = transform_x(data, degree)
 
     #For num jet 0
     ids0 = ids[data[:, 22] == 0]
