@@ -49,6 +49,7 @@ def create_csv_submission(ids, y_pred, name):
 
 # ----- ADDITIONAL HELPER FUNCTIONS ------------------------------------------------------------------------------------
 def compute_accuracy(y, y_prediction):
+    ''' computes accuracy of a prediction '''
     correct = 0.0
     for i in range (len(y)):
         if(y[i] == y_prediction[i]):
@@ -58,6 +59,7 @@ def compute_accuracy(y, y_prediction):
 
 
 def remove_aberrant(data):
+    ''' removes missing values from dataset'''
     for i in range(data.shape[1]):
         data[:, i][data[:, i] == -999.0] = np.mean(data[:, i][data[:, i] != -999.0])
 

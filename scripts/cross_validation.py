@@ -2,7 +2,8 @@
 import numpy as np
 from split import *
 from helpers import *
-# ----- This file contains all methods needed to perform cross validation on any model ----------------------------------
+
+# ----- This file contains all methods needed to perform cross validation on an model ----------------------------------
 
 def cross_validation(y, x, k_fold, degree, model, *args):
     """
