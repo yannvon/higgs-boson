@@ -73,7 +73,7 @@ We started by implementing basic machine learning functions that could be handy 
 | logistic regression(y, tx, initial_w, max_iters, gamma)      | Logistic regression using gradient descent or SGD            |
 | reg logistic regression(y, tx, lambda , initial_w, max iters, gamma) | Regularized logistic regression using gradient descent or SGD |
 
-To implement most of these helper functions are required. These are also located in the same file for simplicity, they are clearly labeled and put in a different section.
+To implement most of these helper functions are required. These are also located in the same file (`implementations.py`) for simplicity, they are clearly labeled and put in a different section.
 
 ### Step 2: Additional ML Methods (Newton's Method)
 
@@ -83,6 +83,8 @@ We added a couple machine learning methods to perform (regularized) logistic reg
 
 We performed multiple data analysis steps, like a five number summary, computing correlations, and more. These steps were useful to decide on data cleaning options. You can find all our conclusions in the commented note book: `notebooks/data_analysis.ipynb`
 
+> Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
+
 ### Step 4:  Data Cleaning
 
 As we realized at Step 3 that the data can be split into 3 different datasets by the jet_num column, we had to adapt the provided methods that load the data and perform the predictions. To simplify the process, we grouped them in `split.py`. Some other methods for standardization for example are included in the `helpers.py` file as they were provided in the labs.
@@ -91,7 +93,9 @@ As we realized at Step 3 that the data can be split into 3 different datasets by
 
 At this point we wanted to get our first results and decided to experiment with different methods. In the end we decided to include the results of linear regression (least squares using normal equations) as well as logistic regression in the report. For this reason we provided the two basic pipelines (without cross validation) in the notebooks `least_squares.ipynb` and `logistic_reg.ipynb`. 
 
-The pipeline is constructed in such a way that it can easily be changed to a different model. This is achieved by having two function ``transform_y()` and `transform_x()` that perform all operations on the dataset. In this way performing the same operations on a new dataset is a breeze.
+The pipeline is constructed in such a way that it can easily be changed to a different model. This is achieved by having two function `transform_y()` and `transform_x()` that perform all operations on the dataset. In this way performing the same operations on a new dataset is a breeze.
+
+> Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
 
 ### Step 6: Feature expansion
 
@@ -101,7 +105,7 @@ We opted for the a simple feature expansion by expanding the features by a polyn
 
 In order to check for *under/- overfitting* of data, we needed to set up a test-bench using k-fold cross-validation. Our functions can be found in the `cross_validation.py` file. Note that we can simply pass a function as a parameter, and the cross validation method will yield the mean, max and min test error.
 
-We arbitrarily chose the k_fold parameter to be 5, since we read that it was a good standard, as it splits the data set into 80% train set and 20% test set.
+In most of our tests, we arbitrarily chose the k_fold parameter to be 5, since we read that it was a good standard, as it splits the data set into 80% train set and 20% test set.
 
 ### Step 8: Creation of Plots, hyper-parameter selection
 
@@ -114,6 +118,8 @@ Finally we took our code from our testing pipelines and exported it to the `run.
 ```bash
 $ python3 run.py
 ```
+
+A file named `submission.csv` will be created containing our methods predictions on the test set.
 
 ## Team members
 
