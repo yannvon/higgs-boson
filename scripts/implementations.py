@@ -136,11 +136,6 @@ def reg_logistic_regression_SGD(y, tx, lambda_, initial_w, max_iters, gamma):
 
         gradient = calculate_gradient_reg_logistic_regression(y_elem, tx_elem, w, lambda_)
         w = w - gamma * gradient
-        #loss = calculate_loss_reg_logistic_regression(y, tx, w, lambda_)
-
-        #if loss < min_loss:
-        #    min_loss = loss
-        #    min_weights = w
 
         # log info
         if iter % 10000 == 0:

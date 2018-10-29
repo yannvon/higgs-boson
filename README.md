@@ -121,6 +121,8 @@ $ python3 run.py
 
 A file named `submission.csv` will be created containing our methods predictions on the test set.
 
+Note that we observed that different architectures (32bit/64bit) yield slightly different results. We believe that this is normal given the many floating point operations we do.
+
 ## Team members
 
 - Benno Schneeberger
