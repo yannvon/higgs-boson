@@ -26,7 +26,7 @@ The project is structured as follows, if you want quick results, simple run `run
 │   ├── helper.py           # Methods to load and display data from labs and proj_1
 │   ├── split.py            # Methods to split data set
 │   ├── cross_validation.py # Methods allowing us to perform cross validation
-│   ├── run.py 				# Main script that runs entire pipeline, best submission
+│   ├── run.py 				      # Main script that runs entire pipeline, best submission
 │   ├── least_squares.ipynb # Simple pipeline performing least squares regression
 │   ├── logistic_reg.ipynb  # Simple pipeline performing logistic regression
 │   └── data_analysis.ipynb # Data analysis and cleaning broken down
