@@ -26,8 +26,7 @@ The project is structured as follows, if you want quick results, simple run `run
 │   ├── helper.py           # Methods to load and display data from labs and proj_1
 │   ├── split.py            # Methods to split data set
 │   ├── cross_validation.py # Methods allowing us to perform cross validation
-│   └── run.py 				# Main script that runs entire pipeline, best submission
-├── notebooks               # Our notebooks used for developement and testing
+│   ├── run.py 				# Main script that runs entire pipeline, best submission
 │   ├── least_squares.ipynb # Simple pipeline performing least squares regression
 │   ├── logistic_reg.ipynb  # Simple pipeline performing logistic regression
 │   └── data_analysis.ipynb # Data analysis and cleaning broken down
@@ -81,9 +80,9 @@ We added a couple machine learning methods to perform (regularized) logistic reg
 
 ### Step 3:  Exploratory data analysis
 
-We performed multiple data analysis steps, like a five number summary, computing correlations, and more. These steps were useful to decide on data cleaning options. You can find all our conclusions in the commented notebook: `notebooks/data_analysis.ipynb`
+We performed multiple data analysis steps, like a five number summary, computing correlations, and more. These steps were useful to decide on data cleaning options. You can find all our conclusions in the commented notebook: `scripts/data_analysis.ipynb`
 
-> Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
+> Note: All notebooks should be run from inside the /scripts subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
 
 ### Step 4:  Data Cleaning
 
