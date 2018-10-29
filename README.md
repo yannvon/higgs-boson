@@ -95,7 +95,7 @@ At this point we wanted to get our first results and decided to experiment with 
 
 The pipeline is constructed in such a way that it can easily be changed to a different model. This is achieved by having two functions `transform_y()` and `transform_x()` that perform all operations on the dataset. In this way performing the same operations on a new dataset is a breeze.
 
-> Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
+> Note: All notebooks should be run from inside the /scripts subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
 
 ### Step 6: Feature expansion
 
