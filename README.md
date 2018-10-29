@@ -12,7 +12,7 @@ The dataset stems from one of the most popular machine learning challenges recen
 
 ## Project structure
 
-The project is structured as follows, if you want quick results, simple run `run.py`. To get an overview of our data analysis and machine learning pipeline the notebooks  `data_analysis.ipynb` and `logistic_reg.ipynb` are ideal.
+The project is structured as follows, if you want quick results, simple run `run.py`. To get an overview of our data analysis and machine learning pipeline, the notebooks  `data_analysis.ipynb` and `logistic_reg.ipynb` are ideal.
 
 ```
 .
@@ -40,7 +40,7 @@ The project is structured as follows, if you want quick results, simple run `run
 
 ## Data set
 
-The data set can be download [the official kaggle competition by CERN](https://www.kaggle.com/c/higgs-boson). From the description we see that the data is structured as follows: 
+The data set can be downloaded [the official kaggle competition by CERN](https://www.kaggle.com/c/higgs-boson). From the description we see that the data is structured as follows: 
 
 - **train.csv** - Training set of 250000 events. The file  starts with the ID column, then the label column, and finally 30 feature columns.
 - **test.csv** -The test set of around 568238 events - Everything as for train.csv, except the label is missing.
@@ -62,7 +62,7 @@ We would like to point to [the technical documentation](http://higgsml.lal.in2p3
 
 ### Step 1: Implementation of basic ML Methods
 
-We started by implementing basic machine learning functions that could be handy for the task in the implementations. The required function were the following:
+We started by implementing basic machine learning functions that could be handy for the task in the implementations. The required functions were the following:
 
 | Function                                                     | Details                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -73,7 +73,7 @@ We started by implementing basic machine learning functions that could be handy 
 | logistic regression(y, tx, initial_w, max_iters, gamma)      | Logistic regression using gradient descent or SGD            |
 | reg logistic regression(y, tx, lambda , initial_w, max iters, gamma) | Regularized logistic regression using gradient descent or SGD |
 
-To implement most of these helper functions are required. These are also located in the same file (`implementations.py`) for simplicity, they are clearly labeled and put in a different section.
+To implement most of these, helper functions are required. These are located in the same file (`implementations.py`) for simplicity, they are clearly labeled and put in a different section.
 
 ### Step 2: Additional ML Methods (Newton's Method)
 
@@ -81,7 +81,7 @@ We added a couple machine learning methods to perform (regularized) logistic reg
 
 ### Step 3:  Exploratory data analysis
 
-We performed multiple data analysis steps, like a five number summary, computing correlations, and more. These steps were useful to decide on data cleaning options. You can find all our conclusions in the commented note book: `notebooks/data_analysis.ipynb`
+We performed multiple data analysis steps, like a five number summary, computing correlations, and more. These steps were useful to decide on data cleaning options. You can find all our conclusions in the commented notebook: `notebooks/data_analysis.ipynb`
 
 > Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
 
@@ -93,7 +93,7 @@ As we realized at Step 3 that the data can be split into 3 different datasets by
 
 At this point we wanted to get our first results and decided to experiment with different methods. In the end we decided to include the results of linear regression (least squares using normal equations) as well as logistic regression in the report. For this reason we provided the two basic pipelines (without cross validation) in the notebooks `least_squares.ipynb` and `logistic_reg.ipynb`. 
 
-The pipeline is constructed in such a way that it can easily be changed to a different model. This is achieved by having two function `transform_y()` and `transform_x()` that perform all operations on the dataset. In this way performing the same operations on a new dataset is a breeze.
+The pipeline is constructed in such a way that it can easily be changed to a different model. This is achieved by having two functions `transform_y()` and `transform_x()` that perform all operations on the dataset. In this way performing the same operations on a new dataset is a breeze.
 
 > Note: All notebooks should be run from inside the /notebooks subdirectory, as otherwise the relative paths to the helper functions and dataset will be wrong.
 
