@@ -113,7 +113,7 @@ We used the previously set up functionality to run many iterations of our method
 
 ### Step 9: Creation of run.py
 
-Finally we took our code from our testing pipelines and exported it to the `run.py` script. If you want to replicate our results you can simply download the data set into the /data folder and run this script as follows:
+Finally we took our code from our testing pipelines and exported it to the `run.py` script. If you want to replicate our results you can simply download the data set into the /data folder and run this script from inside the subdirectory as follows:
 
 ```bash
 $ python3 run.py

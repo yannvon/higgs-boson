@@ -6,8 +6,8 @@ from cross_validation import *
 
 def run(): 
     # Load data
-    y_train, tx_train, ids_train = load_csv_data("train.csv")
-    y_test, tx_test, ids_test = load_csv_data("test.csv") 
+    y_train, tx_train, ids_train = load_csv_data("../data/train.csv")
+    y_test, tx_test, ids_test = load_csv_data("../data/test.csv") 
    
     # Set degree of polynomial expansion
     degree = 8
